@@ -526,7 +526,13 @@ public class FlutterBluePlusPlugin implements
                         // services
                         for (int i = 0; i < withServices.size(); i++) {
                             ParcelUuid s = ParcelUuid.fromString(uuid128(withServices.get(i)));
-                            ScanFilter f = new ScanFilter.Builder().setServiceUuid(s).build();
+                            ParcelUuid serviceMask;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                serviceMask = ParcelUuid.fromString("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+                            } else {
+                                serviceMask = ParcelUuid.fromString("FFFFFFFF-0000-0000-0000-000000000000");
+                            }
+                            ScanFilter f = new ScanFilter.Builder().setServiceUuid(s, serviceMask).build();
                             filters.add(f);
                         }
                         
